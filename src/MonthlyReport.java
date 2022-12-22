@@ -7,16 +7,24 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MonthlyReport {
-    public ArrayList<MonthData> monthData;
-    public String monthName;
+    public HashMap<Integer, ArrayList<MonthData>> everyMonthData;
 
-    public MonthlyReport(String monthName) {
-        monthData = new ArrayList<>();
-        this.monthName = monthName;
+    public MonthlyReport() {
+        everyMonthData = new HashMap<>();
     }
 
-    public void readMonthlyReports(String path) {
+    public void readMonthlyReports() {
+        for (int i = 1; i <= 3; i++) {
+            readMonthlyReportsByPath("resources/m.20210" + i + ".csv", i);
+        }
+    }
+
+    public void readMonthlyReportsByPath(String path, int month) {
+        ArrayList<MonthData> monthData = new ArrayList<>();
         List<String> content = readFileContents(path);
+        if (content.isEmpty()) {
+            return;
+        }
         for (int i = 1; i < content.size(); i++) {
             String line = content.get(i); //item_name,is_expense,quantity,sum_of_one
             String[] lineContents = line.split(",");
@@ -25,14 +33,15 @@ public class MonthlyReport {
             int quantity = Integer.parseInt(lineContents[2]);
             int sumOfOne = Integer.parseInt(lineContents[3]);
 
-            MonthData monthData = new MonthData(itemName, isExpense, quantity, sumOfOne);
-            this.monthData.add(monthData);
+            MonthData monthDatas = new MonthData(itemName, isExpense, quantity, sumOfOne);
+            monthData.add(monthDatas);
         }
+        everyMonthData.put(month, monthData);
     }
 
-    public int getTotalIncome() {
+    public int getTotalIncome(int month) {
         int sum = 0;
-        HashMap<String, Integer> income = getMapOfIncome();
+        HashMap<String, Integer> income = getMapOfIncomePerMonth(month);
         if (income == null) {
             return -1;
         }
@@ -43,9 +52,9 @@ public class MonthlyReport {
         return sum;
     }
 
-    public int getTotalExpense() {
+    public int getTotalExpense(int month) {
         int sum = 0;
-        HashMap<String, Integer> expenses = getMapOfExpenses();
+        HashMap<String, Integer> expenses = getMapOfExpensesPerMonth(month);
         if (expenses == null) {
             return -1;
         }
@@ -57,19 +66,23 @@ public class MonthlyReport {
     }
 
     public void printMonthlyReport() {
-        if (monthData.isEmpty()) {
-            System.out.println("Отчёт еще не считан");
+        if (everyMonthData.isEmpty()) {
+            System.out.println("Месячный отчёт еще не был считан!");
             return;
         }
-        System.out.println("Отчёт за " + monthName + ":");
-        getAndPrintTopProfitProduct();
-        getAndPrintTopExpenseProduct();
+        for (int i = 0; i < everyMonthData.size(); i++) {
+            String monthName = MonthNames.getMonthNameByNumber(i + 1);
+            System.out.println("Отчёт за " + monthName + ":");
+            getAndPrintTopMonthProfitProduct(i + 1);
+            getAndPrintTopMonthExpenseProduct(i + 1);
+        }
+
     }
 
-    private void getAndPrintTopProfitProduct() {
+    private void getAndPrintTopMonthProfitProduct(int month) {
         String topProductName = "";
         int topProductProfit = 0;
-        HashMap<String, Integer> income = getMapOfIncome();
+        HashMap<String, Integer> income = getMapOfIncomePerMonth(month);
         if (income == null) {
             return;
         }
@@ -84,10 +97,10 @@ public class MonthlyReport {
         System.out.println("Самый прибыльный товар - " + topProductName + " был продан на сумму " + topProductProfit);
     }
 
-    private void getAndPrintTopExpenseProduct() {
+    private void getAndPrintTopMonthExpenseProduct(int month) {
         String topProductName = "";
         int topProductExpense = 0;
-        HashMap<String, Integer> expenses = getMapOfExpenses();
+        HashMap<String, Integer> expenses = getMapOfExpensesPerMonth(month);
         if (expenses == null) {
             return;
         }
@@ -102,8 +115,9 @@ public class MonthlyReport {
         System.out.println("Самая большая трата - " + topProductName + " на сумму " + topProductExpense);
     }
 
-    private HashMap<String, Integer> getMapOfIncome() {
-        if (monthData.isEmpty()) {
+    private HashMap<String, Integer> getMapOfIncomePerMonth(int month) {
+        ArrayList<MonthData> monthData = getMonthDataList(month);
+        if (monthData == null || monthData.isEmpty()) {
             return null;
         }
         HashMap<String, Integer> income = new HashMap<>();
@@ -116,8 +130,9 @@ public class MonthlyReport {
         return income;
     }
 
-    private HashMap<String, Integer> getMapOfExpenses() {
-        if (monthData.isEmpty()) {
+    private HashMap<String, Integer> getMapOfExpensesPerMonth(int month) {
+        ArrayList<MonthData> monthData = getMonthDataList(month);
+        if (monthData == null || monthData.isEmpty()) {
             return null;
         }
         HashMap<String, Integer> expenses = new HashMap<>();
@@ -128,6 +143,13 @@ public class MonthlyReport {
             }
         }
         return expenses;
+    }
+
+    private ArrayList<MonthData> getMonthDataList(int num) {
+        if (everyMonthData.isEmpty() || num > everyMonthData.size() || num < 1) {
+            return null;
+        }
+        return everyMonthData.get(num);
     }
 
     public List<String> readFileContents(String path) {

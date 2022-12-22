@@ -1,44 +1,41 @@
 import java.util.Scanner;
 
 public class CommandLineManager {
+    Commands command;
     Scanner scanner = new Scanner(System.in);
-    MonthlyReport monthlyReport1 = new MonthlyReport("Январь");
-    MonthlyReport monthlyReport2 = new MonthlyReport("Февраль");
-    MonthlyReport monthlyReport3 = new MonthlyReport("Март");
+    MonthlyReport monthlyReport = new MonthlyReport();
     YearlyReport yearlyReport = new YearlyReport(2021);
+
+    Checker checker = new Checker(monthlyReport, yearlyReport);
 
     public void printMenuAndHandleCommandInfinitely() {
         printMenu();
-        int command = scanner.nextInt();
+        int userInputCommand = scanner.nextInt();
 
-        while (command != 0) {
+
+        while (userInputCommand != 0) {
+            try {
+               command = Commands.values()[userInputCommand-1];
+            } catch (ArrayIndexOutOfBoundsException e){
+                command = Commands.DEFAULT;
+            }
+
             switch (command) {
-                case 1:
-                    monthlyReport1.readMonthlyReports("resources/m.202101.csv");
-                    monthlyReport2.readMonthlyReports("resources/m.202102.csv");
-                    monthlyReport3.readMonthlyReports("resources/m.202103.csv");
+                case READ_MONTH_REPORTS:
+                    monthlyReport.readMonthlyReports();
                     System.out.println("Месячные отчёты считаны!");
                     break;
-                case 2:
+                case READ_YEAR_REPORTS:
                     yearlyReport.readYearlyReport();
                     System.out.println("Годовой отчет считан!");
                     break;
-                case 3:
-                    Checker checker = new Checker(monthlyReport1, yearlyReport, 0);
-                    if(!checker.check()){
-                        break;
-                    }
-                    checker = new Checker(monthlyReport2, yearlyReport, 1);
-                    checker.check();
-                    checker = new Checker(monthlyReport3, yearlyReport, 2);
+                case COMPARE_REPORTS:
                     checker.check();
                     break;
-                case 4:
-                    monthlyReport1.printMonthlyReport();
-                    monthlyReport2.printMonthlyReport();
-                    monthlyReport3.printMonthlyReport();
+                case PRINT_MONTH_REPORT:
+                    monthlyReport.printMonthlyReport();
                     break;
-                case 5:
+                case PRINT_YEAR_REPORT:
                     yearlyReport.printYearReport();
                     break;
                 default:
@@ -47,7 +44,7 @@ public class CommandLineManager {
             }
 
             printMenu();
-            command = scanner.nextInt();
+            userInputCommand = scanner.nextInt();
         }
 
     }

@@ -44,7 +44,7 @@ public class YearlyReport {
     private void getAndPrintMonthlyProfit() {
         for (int i = 0; i < yearData.size(); i += 2) {
             int month = i / 2;
-            System.out.println("Прибыль за " + (month + 1) + " месяц: " + getMonthlyProfit(i));
+            System.out.println("Прибыль за " + (MonthNames.getMonthNameByNumber(month+1)) + " месяц: " + getMonthlyProfit(i));
         }
     }
 

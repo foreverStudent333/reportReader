@@ -1,0 +1,8 @@
+public enum Commands {
+    READ_MONTH_REPORTS,
+    READ_YEAR_REPORTS,
+    COMPARE_REPORTS,
+    PRINT_MONTH_REPORT,
+    PRINT_YEAR_REPORT,
+    DEFAULT
+}
