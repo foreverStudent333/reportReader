@@ -12,13 +12,8 @@ public class CommandLineManager {
         printMenu();
         int userInputCommand = scanner.nextInt();
 
-
         while (userInputCommand != 0) {
-            try {
-               command = Commands.values()[userInputCommand-1];
-            } catch (ArrayIndexOutOfBoundsException e){
-                command = Commands.DEFAULT;
-            }
+            command = Commands.findByNumber(userInputCommand);
 
             switch (command) {
                 case READ_MONTH_REPORTS:
