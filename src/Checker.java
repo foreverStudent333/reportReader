@@ -1,4 +1,8 @@
 public class Checker {
+    /*
+    Класс реализует сверку отчетов по месяца с отчетом годовым
+    Если какие-то отчеты не совпадают выводит об этом инфо
+     */
     public MonthlyReport monthlyReport;
     public YearlyReport yearlyReport;
 

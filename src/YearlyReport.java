@@ -15,6 +15,11 @@ public class YearlyReport {
         this.year = year;
     }
 
+    public YearlyReport(ArrayList<YearData> yearData, int year) {
+        this.yearData = yearData;
+        this.year = year;
+    }
+
     public void readYearlyReport() {
         String path = "resources/y.2021.csv";
         List<String> content = readFileContents(path);
@@ -44,7 +49,7 @@ public class YearlyReport {
     private void getAndPrintMonthlyProfit() {
         for (int i = 0; i < yearData.size(); i += 2) {
             int month = i / 2;
-            System.out.println("Прибыль за " + (MonthNames.getMonthNameByNumber(month+1)) + " месяц: " + getMonthlyProfit(i));
+            System.out.println("Прибыль за " + (MonthNames.getMonthNameByNumber(month + 1)) + " месяц: " + getMonthlyProfit(i));
         }
     }
 
@@ -62,7 +67,7 @@ public class YearlyReport {
             return -1;
         }
         int sumExpense = getSumExpense();
-        return sumExpense / (yearData.size()/2);
+        return sumExpense / (yearData.size() / 2);
     }
 
     private int getSumExpense() {

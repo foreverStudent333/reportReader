@@ -10,7 +10,8 @@ public class CommandLineManager {
 
     public void printMenuAndHandleCommandInfinitely() {
         printMenu();
-        int userInputCommand = scanner.nextInt();
+
+        int userInputCommand = checkInputAndReturnInt();
 
         while (userInputCommand != 0) {
             command = Commands.findByNumber(userInputCommand);
@@ -39,9 +40,16 @@ public class CommandLineManager {
             }
 
             printMenu();
-            userInputCommand = scanner.nextInt();
+            userInputCommand = checkInputAndReturnInt();
         }
+    }
 
+    public int checkInputAndReturnInt() {
+        try {
+            return Integer.parseInt(scanner.nextLine());
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 
     public void printMenu() {

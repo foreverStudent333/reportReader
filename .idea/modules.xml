@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/java-sprint2-hw.iml" filepath="$PROJECT_DIR$/java-sprint2-hw.iml" />
+      <module fileurl="file://$PROJECT_DIR$/report reader.iml" filepath="$PROJECT_DIR$/report reader.iml" />
     </modules>
   </component>
 </project>

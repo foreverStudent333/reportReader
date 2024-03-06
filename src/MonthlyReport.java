@@ -13,13 +13,17 @@ public class MonthlyReport {
         everyMonthData = new HashMap<>();
     }
 
-    public void readMonthlyReports() {
+    public MonthlyReport(HashMap<Integer, ArrayList<MonthData>> everyMonthData) {
+        this.everyMonthData = everyMonthData;
+    }
+
+    public void readMonthlyReports() {  // у меня 3 тест файла .csv с отчетами за месяц, поэтому цикл 3 итерации
         for (int i = 1; i <= 3; i++) {
             readMonthlyReportsByPath("resources/m.20210" + i + ".csv", i);
         }
     }
 
-    public void readMonthlyReportsByPath(String path, int month) {
+    public void readMonthlyReportsByPath(String path, int month) {  // читаю отчеты за месяц из csv файла
         ArrayList<MonthData> monthData = new ArrayList<>();
         List<String> content = readFileContents(path);
         if (content.isEmpty()) {
